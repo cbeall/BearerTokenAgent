@@ -1,0 +1,24 @@
+﻿{
+  "version": "0.1.0-beta1-*",
+  "authors": [ "Craig Beall" ],
+  "packOptions": {
+    "tags": [ "Bearer", "Bearer Token", "HttpClient", "OAuth2", "OAuth 2.0", "OpenID Connect" ],
+    "projectUrl": "https://github.com/cbeall/BearerTokenAgent",
+    "licenseUrl": "https://raw.githubusercontent.com/cbeall/BearerTokenAgent/master/LICENSE",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/cbeall/BearerTokenAgent"
+    }
+  },
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "IdentityModel": "2.0.1"
+  },
+
+  "frameworks": {
+    "netstandard1.3": {},
+
+    "net451": {}
+  }
+}
