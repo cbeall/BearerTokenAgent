@@ -1,0 +1,33 @@
+﻿{
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "BearerTokenAgent": {
+      "target": "project"
+    },
+    "Mendham.Testing.AspNetCore": "1.0.0-beta7",
+    "Mendham.Testing.Moq": "1.0.0-beta7",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "FluentAssertions": "4.17.0",
+    "IdentityServer4": "1.0.0-rc3",
+    "IdentityServer4.AccessTokenValidation": "1.0.1-rc3"
+
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.1"
+        }
+      }
+    },
+
+    "net452": {
+      "dependencies": {
+        "Microsoft.NETCore.Platforms": "1.0.1"
+      }
+    }
+  }
+}
