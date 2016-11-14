@@ -73,11 +73,30 @@ namespace BearerTokenAgent.Test.Integration.Fixtures
                 Enabled = true,
                 Type = ScopeType.Resource
             };
+            yield return new Scope
+            {
+                Name = Constants.Scopes.Api2,
+                Enabled = true,
+                Type = ScopeType.Resource
+            };
         }
 
         private static IEnumerable<Client> GetClients()
         {
-            return Enumerable.Empty<Client>();
+            yield return new Client
+            {
+                ClientId = Constants.ClientCredentials.ClientId,
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets =
+                {
+                    new Secret(Constants.ClientCredentials.ClientSecret.Sha256())
+                },
+                AllowedScopes =
+                {
+                    Constants.Scopes.Api1,
+                    Constants.Scopes.Api2
+                }
+            };
         }
     }
 }

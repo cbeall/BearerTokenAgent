@@ -8,6 +8,7 @@
     "Mendham.Testing.AspNetCore": "1.0.0-beta7",
     "Mendham.Testing.Moq": "1.0.0-beta7",
     "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "Microsoft.AspNetCore.Authorization": "1.0.0",
     "FluentAssertions": "4.17.0",
     "IdentityServer4": "1.0.0-rc3",
     "IdentityServer4.AccessTokenValidation": "1.0.1-rc3"
