@@ -18,13 +18,13 @@ namespace BearerTokenAgent
         public HttpClient GetHttpClient(IRemoteToken remoteToken)
         {
             ITokenManager tokenManager = new RemoteTokenManager(remoteToken);
-            return GetHttpClient(remoteToken);
+            return GetHttpClient(tokenManager);
         }
 
         public HttpClient GetHttpClient(IRemoteToken remoteToken, HttpMessageHandler handler)
         {
             ITokenManager tokenManager = new RemoteTokenManager(remoteToken);
-            return GetHttpClient(remoteToken, handler);
+            return GetHttpClient(tokenManager, handler);
         }
 
         public HttpClient GetHttpClient(ITokenManager tokenManager)
@@ -42,13 +42,13 @@ namespace BearerTokenAgent
         public HttpClient GetClientCredentialsHttpClient(ClientCredentialsTokenOptions options)
         {
             IRemoteToken remoteToken = new ClientCredentialsToken(options);
-            return GetHttpClient(new ClientCredentialsToken(options));
+            return GetHttpClient(remoteToken);
         }
 
         public HttpClient GetClientCredentialsHttpClient(ClientCredentialsTokenOptions options, HttpMessageHandler handler)
         {
             IRemoteToken remoteToken = new ClientCredentialsToken(options);
-            return GetHttpClient(new ClientCredentialsToken(options), handler);
+            return GetHttpClient(remoteToken, handler);
         }
 
         private HttpClient GetHttpClient(ITokenManager tokenManager, IHttpMessageInvokerFactory httpMessageInvokerFactory)

@@ -26,13 +26,11 @@ namespace BearerTokenAgent.Cancellation
                 })
                 .ToList();
 
-            var tokens = _activeTokens
-                .Select(a => a.CancellationToken)
-                .ToList();
+            var tokens = _activeTokens.Select(a => a.CancellationToken);
 
             if (!tokens.Any())
             {
-                tokens.Add(CancellationToken.None);
+                return CancellationToken.None;
             }
 
             CancellationTokenSource cancellationTokenSource =
