@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.Models;
 using Mendham.Testing.AspNetCore;
+using Mendham.Testing.Moq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +40,11 @@ namespace BearerTokenAgent.Test.Integration.Fixtures
 
         public override void ResetFixture()
         {
-            MiddlewareAction = Mock.Of<IMiddlewareAction>(ctx => ctx.TakeAction() == Task.FromResult(0));
+            MiddlewareAction = Mock.Of<IMiddlewareAction>();
+
+            MiddlewareAction.AsMock()
+                .Setup(a => a.TakeAction(It.IsAny<HttpContext>()))
+                .ReturnsTask();
         }
 
         private void ConfigureServices(IServiceCollection serviceCollection)
@@ -58,7 +63,7 @@ namespace BearerTokenAgent.Test.Integration.Fixtures
             app.Use(next => async ctx =>
             {
                 var middlewareAction = ctx.RequestServices.GetRequiredService<IMiddlewareAction>();
-                await middlewareAction.TakeAction();
+                await middlewareAction.TakeAction(ctx);
                 await next(ctx);
             });
 

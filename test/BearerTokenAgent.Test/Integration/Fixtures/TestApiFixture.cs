@@ -1,14 +1,17 @@
 ﻿using IdentityModel;
 using Mendham;
 using Mendham.Testing;
+using Mendham.Testing.Moq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -40,7 +43,11 @@ namespace BearerTokenAgent.Test.Integration.Fixtures
 
         public void ResetFixture()
         {
-            MiddlewareAction = Mock.Of<IMiddlewareAction>(ctx => ctx.TakeAction() == Task.FromResult(0));
+            MiddlewareAction = Mock.Of<IMiddlewareAction>();
+
+            MiddlewareAction.AsMock()
+                .Setup(a => a.TakeAction(It.IsAny<HttpContext>()))
+                .ReturnsTask();
         }
 
         private void ConfigureServices(IServiceCollection services)
@@ -74,7 +81,7 @@ namespace BearerTokenAgent.Test.Integration.Fixtures
             app.Use(next => async ctx =>
             {
                 var middlewareAction = ctx.RequestServices.GetRequiredService<IMiddlewareAction>();
-                await middlewareAction.TakeAction();
+                await middlewareAction.TakeAction(ctx);
                 await next(ctx);
             });
 
@@ -93,6 +100,12 @@ namespace BearerTokenAgent.Test.Integration.Fixtures
                         ctx.Response.StatusCode = 403;
                     }
                 });
+            });
+
+            app.Run(ctx =>
+            {
+                ctx.Response.StatusCode = (int)HttpStatusCode.NoContent;
+                return Task.FromResult(0);
             });
         }
 

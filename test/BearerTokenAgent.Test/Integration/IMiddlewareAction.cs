@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace BearerTokenAgent.Test.Integration
 {
     public interface IMiddlewareAction
     {
-        Task TakeAction();
+        Task TakeAction(HttpContext context);
     }
 }
