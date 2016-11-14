@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -93,8 +94,75 @@ namespace BearerTokenAgent.Test.Integration
                 client.BaseAddress = Fixture.TestApi.Server.BaseAddress;
                 var response = await client.GetAsync("");
 
-                response.StatusCode.Should()
-                    .Be(HttpStatusCode.OK, "api1 scope is inclued in bearer token");
+                throw new NotImplementedException("test needs to be finished");
+            }
+        }
+
+        [Fact]
+        public async Task ClientCredentials_ClientMessageTimeoutDuringTokenRequest_WhatIsIt()
+        {
+            var options = new ClientCredentialsTokenOptions
+            {
+                ClientId = Constants.ClientCredentials.ClientId,
+                ClientSecret = Constants.ClientCredentials.ClientSecret,
+                Scopes = new List<string> { Constants.Scopes.Api1 },
+
+                TokenServiceAddress = Fixture.IdentityProvider.GetTokenServiceAddress(),
+                TokenServiceHttpMessageHandler = Fixture.IdentityProvider.CreateMessageHandler()
+            };
+
+            var cancellationTokenSource = new CancellationTokenSource();
+
+
+            Fixture.IdentityProvider.MiddlewareAction.AsMock()
+                .Setup(a => a.TakeAction(It.IsAny<HttpContext>()))
+                .Returns<HttpContext>(ctx =>
+                {
+                    cancellationTokenSource.Cancel();
+                    return Task.Delay(TimeSpan.FromSeconds(10), ctx.RequestAborted);
+                });
+
+            using (var client = Fixture.HttpClientFactory
+                .GetClientCredentialsHttpClient(options, Fixture.TestApi.Server.CreateHandler()))
+            {
+                client.BaseAddress = Fixture.TestApi.Server.BaseAddress;
+                var response = await client.GetAsync("", cancellationTokenSource.Token);
+
+                throw new NotImplementedException("test needs to be finished");
+            }
+        }
+
+        [Fact]
+        public async Task ClientCredentials_ClientMessageTimeoutDuringApiRequest_WhatIsIt()
+        {
+            var options = new ClientCredentialsTokenOptions
+            {
+                ClientId = Constants.ClientCredentials.ClientId,
+                ClientSecret = Constants.ClientCredentials.ClientSecret,
+                Scopes = new List<string> { Constants.Scopes.Api1 },
+
+                TokenServiceAddress = Fixture.IdentityProvider.GetTokenServiceAddress(),
+                TokenServiceHttpMessageHandler = Fixture.IdentityProvider.CreateMessageHandler()
+            };
+
+            var cancellationTokenSource = new CancellationTokenSource();
+
+            Fixture.TestApi.MiddlewareAction.AsMock()
+                .Setup(a => a.TakeAction(It.IsAny<HttpContext>()))
+                .Returns<HttpContext>(ctx => 
+                {
+                    cancellationTokenSource.Cancel();
+                    return Task.Delay(TimeSpan.FromSeconds(10), ctx.RequestAborted);
+                });
+
+            using (var client = Fixture.HttpClientFactory
+                .GetClientCredentialsHttpClient(options, Fixture.TestApi.Server.CreateHandler()))
+            {
+
+                client.BaseAddress = Fixture.TestApi.Server.BaseAddress;
+                var response = await client.GetAsync("", cancellationTokenSource.Token);
+
+                throw new NotImplementedException("test needs to be finished");
             }
         }
     }

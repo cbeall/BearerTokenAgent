@@ -26,7 +26,7 @@ namespace BearerTokenAgent
                     if (tokenResponseCancellationRequested())
                     {
                         //TODO Token Service Time
-                        throw new NotImplementedException();
+                        throw new NotImplementedException("need to implement token response cancelled");
                     }
 
                     // A cancellation occured that was not the token response timeout cancellation. 
